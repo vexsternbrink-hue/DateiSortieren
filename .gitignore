@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+build/
+dist/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Umgebungsvariablen & Geheimnisse
+.env
+.env.*
+!.env.example
+*.local
+
+# Supabase CLI
+supabase/.temp/
+supabase/.branches/
+
+# System
+.DS_Store
+Thumbs.db
+.vercel

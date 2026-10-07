@@ -1,0 +1,93 @@
+# DateiSortieren – Agent-Konfiguration
+# Speicherort: ~/.dateisortieren/config.yaml  (anlegen mit: dateisortieren init)
+# Einstellungen aus dem Web-Dashboard (Regeln, Safe-List, Dry-Run, Vorlagen) überschreiben diese Werte.
+
+# Welche Ordner beobachtet werden
+watch_dirs:
+  - ~/Downloads
+  # - ~/Documents/Inbox
+
+# Wohin sortierte Dateien verschoben werden
+target_root: ~/Dokumente/Sortiert
+
+# SICHERHEIT: true = nur Vorschläge (Dry-Run), nichts wird verändert, bis du freigibst
+dry_run: true
+# Ohne Dry-Run: nur Aktionen mit mindestens dieser KI-Sicherheit laufen automatisch
+auto_apply_min_confidence: 0.85
+# Wartezeit, bis eine neue Datei als "fertig heruntergeladen" gilt
+settle_seconds: 5
+scan_interval_minutes: 60
+recursive: true
+
+ai:
+  # heuristic (offline, ohne KI) | anthropic | openai | ollama (lokales LLM)
+  provider: heuristic
+  # Leer = Standardmodell des Providers (anthropic: claude-opus-5-5, openai: gpt-4.1-mini, ollama: llama3.2)
+  model:
+  effort: low                  # nur anthropic: low | medium | high
+  ollama_url: http://localhost:11434
+  openai_base_url:             # optional: OpenAI-kompatibler Server (z. B. LM Studio)
+  max_chars: 6000              # so viel Text wird pro Datei an die KI geschickt
+  send_files: true             # Bilder/gescannte PDFs ohne Text direkt ans Modell schicken
+  custom_instructions: |
+    # Eigene Regeln in natürlicher Sprache, z. B.:
+    # Alles von meinem Arbeitgeber "Muster GmbH" gehört nach Arbeit/Muster GmbH.
+
+ocr:
+  enabled: false               # benötigt tesseract + pip install "dateisortieren[ocr]"
+  languages: deu+eng
+  max_pages: 3
+
+rename:
+  enabled: true
+  only_cryptic: true           # nur Namen wie SCAN_2026_09_12.pdf, IMG_1234.jpg, download(3).pdf
+  # Platzhalter: {date} {year} {month} {vendor} {doc_type} {title} {amount}
+  template: "{date}_{vendor}_{doc_type}_{amount}"
+
+organize:
+  enabled: true
+  # Platzhalter: {category} {year} {month} {vendor} {doc_type}
+  template: "{category}/{year}"
+  min_confidence: 0.55
+  unknown_category: Unsortiert
+
+duplicates:
+  enabled: true
+  image_hash_distance: 5       # 0 = nur pixelgleich, höher = toleranter
+  text_hash_distance: 3
+
+media:
+  enabled: false
+  image_min_kb: 300
+  jpeg_quality: 85
+  webp_quality: 80
+  png_lossy: false             # true = Farbpalette reduzieren (deutlich kleiner, verlustbehaftet)
+  max_image_dimension:         # z. B. 3840 (Pixel), leer = Originalgröße
+  video_enabled: true          # benötigt ffmpeg
+  video_min_mb: 50
+  video_crf: 28                # 18 = sehr gut, 28 = klein
+  video_preset: medium
+  min_savings_percent: 10
+
+cleanup:
+  enabled: true
+  installer_max_age_days: 14
+  incomplete_max_age_hours: 48
+  temp_max_age_hours: 24
+  remove_empty_dirs: true
+  auto_delete: false           # Löschungen nur nach Freigabe
+
+safelist:
+  paths: []                    # z. B. ~/Downloads/Projekte
+  globs: []                    # z. B. "*.key", "Steuer_*"
+  extensions: []               # z. B. .kdbx, .gpg
+  tags: []                     # z. B. vertraulich
+
+trash:
+  retention_days: 30           # so lange bleibt alles "Gelöschte" wiederherstellbar
+
+cloud:
+  api_url:                     # z. B. https://dein-projekt.vercel.app
+  agent_token:                 # im Dashboard unter "Agenten" erzeugen
+  poll_interval_seconds: 15
+  heartbeat_interval_seconds: 60

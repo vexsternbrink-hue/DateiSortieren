@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- macOS (launchd)
+     1. Pfad zu "dateisortieren" anpassen (which dateisortieren)
+     2. cp service/com.dateisortieren.agent.plist ~/Library/LaunchAgents/
+     3. launchctl load ~/Library/LaunchAgents/com.dateisortieren.agent.plist
+     Hinweis: Terminal/Python braucht ggf. "Festplattenvollzugriff" (Systemeinstellungen → Datenschutz). -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.dateisortieren.agent</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/local/bin/dateisortieren</string>
+    <string>run</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/tmp/dateisortieren.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/dateisortieren.log</string>
+</dict>
+</plist>

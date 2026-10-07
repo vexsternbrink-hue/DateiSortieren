@@ -1,0 +1,15 @@
+# Linux (systemd, Benutzer-Dienst)
+#   cp service/dateisortieren.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload && systemctl --user enable --now dateisortieren
+#   journalctl --user -u dateisortieren -f
+[Unit]
+Description=DateiSortieren Agent
+After=network-online.target
+
+[Service]
+ExecStart=%h/.local/bin/dateisortieren run
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target
